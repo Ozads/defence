@@ -1,13 +1,9 @@
 package com.ozads.futsalnepal.response;
 
-import java.io.Serializable;
+public class PlaceResponse {
 
-
-@SuppressWarnings("serial")
-public class AddressResponseDto implements Serializable{
-	
 	private Long id;
-
+	
 	private String place;
 
 	public Long getId() {
@@ -25,13 +21,6 @@ public class AddressResponseDto implements Serializable{
 	public void setPlace(String place) {
 		this.place = place;
 	}
-
-	
-	
-	
-	
-	
-	
 	
 	
 }

@@ -39,6 +39,10 @@ public interface CourtRepository extends JpaRepository<Court, Long> {
 	List<CourtDto> findAllCourtById(Court court);
 
 
+
+	List<Court> findByCourtAddressAndStatusNot(String add, Status deleted);
+
+
 	
 	
 

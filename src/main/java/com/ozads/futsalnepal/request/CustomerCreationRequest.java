@@ -15,7 +15,7 @@ public class CustomerCreationRequest implements Serializable {
 	private String username;
 	private String password;
 	
-	List<CustomerAddressCreationRequest> address;
+	private String address;
 	
 	
 
@@ -59,13 +59,15 @@ public class CustomerCreationRequest implements Serializable {
 		this.password = password;
 	}
 
-	public List<CustomerAddressCreationRequest> getAddress() {
+	public String getAddress() {
 		return address;
 	}
 
-	public void setAddress(List<CustomerAddressCreationRequest> address) {
+	public void setAddress(String address) {
 		this.address = address;
 	}
+
+	
 
 	
 

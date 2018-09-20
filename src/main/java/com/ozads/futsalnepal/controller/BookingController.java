@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ozads.futsalnepal.request.BookingCreatationRequest;
 import com.ozads.futsalnepal.response.BookingResponseDto;
 import com.ozads.futsalnepal.response.CourtBookingResponse;
+import com.ozads.futsalnepal.response.CustomerBookingResponse;
 import com.ozads.futsalnepal.services.BookingService;
 
 import io.swagger.annotations.ApiImplicitParam;
@@ -38,10 +39,10 @@ public class BookingController {
 		//@ApiImplicitParam(name="token",required=true,dataType="String",paramType="header")})
 	@ApiOperation(value="Save Booking")
 	@RequestMapping(method=RequestMethod.POST)
-	public ResponseEntity<Object> saveBooking(@RequestHeader Long customerId,@RequestHeader Long courtId,
+	public ResponseEntity<Object> saveBooking(@RequestHeader Long customerId,
 			@RequestBody BookingCreatationRequest bookingRequest ){
 		LOG.debug("Request Accepted To book");
-		bookingService.saveBooking(customerId,courtId,bookingRequest);
+		bookingService.saveBooking(customerId,bookingRequest);
 		return new ResponseEntity<Object>("Booking added",HttpStatus.CREATED);
 	}
 	
@@ -52,10 +53,20 @@ public class BookingController {
 	public ResponseEntity<Object> listBookingByCourt(@RequestHeader Long courtId){
 		LOG.debug("Request accepted to List all booking by court");	
 		List<CourtBookingResponse> responseDto= bookingService.listAllbookingByCourt(courtId);
-		Map<Object, Object> response=new HashMap<>();
-		response.put("court", responseDto);
-		return new ResponseEntity<Object>(response,HttpStatus.OK);
+		
+		return new ResponseEntity<Object>(responseDto,HttpStatus.OK);
 	}
+	
+	//@ApiImplicitParams({
+			//@ApiImplicitParam(name="token",required=true,dataType="String",paramType="header")})
+		@ApiOperation(value="List Bookings By Customer")
+		@RequestMapping(value="/listBookingByCustomer",method=RequestMethod.GET)
+		public ResponseEntity<Object> listBookingByCustomer(@RequestHeader Long customerId){
+			LOG.debug("Request accepted to List all booking by court");	
+			List<CustomerBookingResponse> responseDto= bookingService.listAllbookingByCustomer(customerId);
+			
+			return new ResponseEntity<Object>(responseDto,HttpStatus.OK);
+		}
 	
 	
 	

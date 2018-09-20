@@ -12,22 +12,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ozads.futsalnepal.exceptions.NotFoundException;
-import com.ozads.futsalnepal.model.Address;
-import com.ozads.futsalnepal.model.Customer;
 import com.ozads.futsalnepal.model.Booking;
 import com.ozads.futsalnepal.model.Court;
-import com.ozads.futsalnepal.model.CourtAddress;
-import com.ozads.futsalnepal.repository.CustomerRepository;
+import com.ozads.futsalnepal.model.Customer;
 import com.ozads.futsalnepal.repository.BookingRepository;
 import com.ozads.futsalnepal.repository.CourtRepository;
+import com.ozads.futsalnepal.repository.CustomerRepository;
 import com.ozads.futsalnepal.request.BookingCreatationRequest;
-import com.ozads.futsalnepal.response.AddressResponseDto;
-import com.ozads.futsalnepal.response.BookingResponseDto;
-import com.ozads.futsalnepal.response.CourtAddressResponse;
 import com.ozads.futsalnepal.response.CourtBookingResponse;
-
-import com.ozads.futsalnepal.util.Status;
+import com.ozads.futsalnepal.response.CustomerBookingResponse;
 import com.ozads.futsalnepal.util.BookingStatus;
+import com.ozads.futsalnepal.util.Status;
 
 @Service
 public class BookingService {
@@ -44,7 +39,7 @@ public class BookingService {
 	CourtRepository courtRepository;
 
 	
-	public Booking saveBooking(Long customerId,Long courtId,BookingCreatationRequest bookingRequest) {
+	public Booking saveBooking(Long customerId,BookingCreatationRequest bookingRequest) {
 		LOG.debug("Request Accepted to Save booking ");
 	
 		Customer customer = customerRepository.findCustomerByIdAndStatusNot(customerId, Status.DELETED);
@@ -52,21 +47,30 @@ public class BookingService {
 			throw new NotFoundException("Customer Not Found");
 		}
 		
+		Court court =courtRepository.findCourtById(bookingRequest.getCourtId());
+		if(court==null) {
+			throw new NotFoundException("Court  Not Found");
+			
+		}
+		System.out.println(customerId);
+		
+		System.out.println(bookingRequest.getCourtId());
+		
 		Booking booking = new Booking();
 		booking.setBookingDate(new Date());
-		booking.setCustomer(customer);
+		
 		
 		booking.setTimeSlot(bookingRequest.getTimeSlot());
-		booking.setBookingName(bookingRequest.getBookingName());
+		
 		
 		booking.setBookingStatus(BookingStatus.AVAILABLE);
-		booking.setCustomer(new Customer(customerId));
-		booking.setCourt(new Court(courtId));
-		bookingRepository.save(booking);
+		booking.setCustomer(customer);
+		booking.setCourt(court);
+		Booking bs=bookingRepository.save(booking);
 		
 		LOG.debug("The booking has been set");
 
-		return booking;
+		return bs;
 	}
 
 	
@@ -151,9 +155,9 @@ public class BookingService {
 		
 		booking.stream().forEach(u->{
 			CourtBookingResponse bookingResponseDto=new CourtBookingResponse();
-			System.out.println(u.getBookingName());
+			
 			bookingResponseDto.setId(u.getId());
-			bookingResponseDto.setBookingName(u.getBookingName());
+			
 			bookingResponseDto.setTimeSlot(u.getTimeSlot());
 			bookingResponseDto.setBookingDate(u.getBookingDate());
 			
@@ -161,20 +165,44 @@ public class BookingService {
 			bookingResponseDto.setBookingBy(u.getCustomer().getFullName());
 			
 			
-			List<AddressResponseDto> addressResponseDtos=new ArrayList<>();
-			List<Address> addresses=u.getCustomer().getAddress();
-			if(addresses!=null) {
-				addresses.stream().forEach(a->{
-					AddressResponseDto dto=new AddressResponseDto();
-					dto.setId(u.getId());
-					
-					dto.setPlace(a.getPlace());
-					
-					addressResponseDtos.add(dto);
-					
-				});
-			}
-			bookingResponseDto.setAddress(addressResponseDtos);
+			
+			bookingResponses.add(bookingResponseDto);
+		});
+		LOG.debug("List of all Avaliable booking");
+		return bookingResponses;
+	}
+	
+	
+	public List<CustomerBookingResponse> listAllbookingByCustomer(Long customerId) {
+		LOG.debug("List All TimeSlot in Court");
+		List<CustomerBookingResponse> bookingResponses=new ArrayList<>();
+		Customer customer=customerRepository.findCustomerById(customerId);
+	
+		if(customer==null) {
+			throw new NotFoundException("Customer not found");
+		}
+		
+		
+		List<Booking> booking=bookingRepository.findBookingByCustomerAndBookingStatus(customer,BookingStatus.AVAILABLE);
+		
+		if(booking==null) {
+			throw new NotFoundException("Booking Not Avaliable in your court");
+		}
+		
+		
+		booking.stream().forEach(u->{
+			CustomerBookingResponse bookingResponseDto=new CustomerBookingResponse();
+			
+			bookingResponseDto.setId(u.getId());
+				
+			bookingResponseDto.setTimeSlot(u.getTimeSlot());
+			bookingResponseDto.setBookingDate(u.getBookingDate());
+			
+			
+			bookingResponseDto.setBookingTo(u.getCourt().getCourtName());
+			
+			
+			
 			bookingResponses.add(bookingResponseDto);
 		});
 		LOG.debug("List of all Avaliable booking");
@@ -186,12 +214,12 @@ public class BookingService {
 	@Transactional
 	public void deleteBooking(Long bookingId) {
 		LOG.debug("Request Accepted to Delete booking");
-		Booking booking=bookingRepository.findBookingByIdAndBookingStatusNot(bookingId,BookingStatus.PLAYED);
+		Booking booking=bookingRepository.findBookingByIdAndBookingStatusNot(bookingId,BookingStatus.DELETED);
 		if(booking==null) {
 			throw new NotFoundException("Booking not found");
 		}
 		
-		booking.setBookingStatus(BookingStatus.PLAYED);
+		booking.setBookingStatus(BookingStatus.DELETED);
 		bookingRepository.delete(booking);
 		LOG.debug("Booking Deleted");
 	}

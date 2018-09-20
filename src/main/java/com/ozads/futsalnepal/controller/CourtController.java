@@ -40,10 +40,10 @@ public class CourtController {
 		//@ApiImplicitParam(name="token",required=true,dataType="String",paramType="header")})
 	@ApiOperation(value="Save Court",notes="Api to save court")
 	@RequestMapping(method=RequestMethod.POST)
-	public ResponseEntity<Object> saveCourt(@RequestHeader Long userId,
+	public ResponseEntity<Object> saveCourt(
 			@RequestBody CourtCreatationRequest courtCreatationRequest){
 		LOG.debug("Request to Add court");
-		courtService.saveCourt(userId,courtCreatationRequest);
+		courtService.saveCourt(courtCreatationRequest);
 		
 		return new ResponseEntity<Object>("Court Created",HttpStatus.CREATED);
 		
@@ -61,13 +61,12 @@ public class CourtController {
 	//@ApiImplicitParams({
 		//@ApiImplicitParam(name="token",required=true,dataType="String",paramType="header")})
 	@ApiOperation(value="List All Courts",notes="Api to List All Court")
-	@RequestMapping(method=RequestMethod.GET)
+	@RequestMapping(value="listAll",method=RequestMethod.GET)
 	public ResponseEntity<Object> listAllCourt(){
 		LOG.debug("List All Courts");
 		List<CourtDto> court=courtService.listAllCourts();
-		Map<Object,Object> responce=new HashMap<>();
-		responce.put("court", court);
-		return new ResponseEntity<Object>(responce,HttpStatus.OK);
+		
+		return new ResponseEntity<Object>(court,HttpStatus.OK);
 	}
 	
 	
@@ -76,9 +75,7 @@ public class CourtController {
 	public ResponseEntity<Object> getCourtByAddress(@RequestHeader Long customerId){
 		LOG.debug("Request Accepted to get court By Address..");
 		List<CourtByAddressDto> addressresponse=courtService.getCourtAddress(customerId);
-		Map<Object,Object> response=new HashMap<>();
-		response.put("Store", addressresponse);
-		return new ResponseEntity<Object>(response,HttpStatus.OK);
+		return new ResponseEntity<Object>(addressresponse,HttpStatus.OK);
 		
 	}
 

@@ -18,19 +18,19 @@ import com.ozads.futsalnepal.exceptions.AlreadyExistException;
 import com.ozads.futsalnepal.exceptions.ExpireException;
 import com.ozads.futsalnepal.exceptions.NotFoundException;
 
-import com.ozads.futsalnepal.model.Address;
+
 import com.ozads.futsalnepal.model.Customer;
 import com.ozads.futsalnepal.model.Login;
 import com.ozads.futsalnepal.model.Verification;
-import com.ozads.futsalnepal.repository.AddressRepository;
+
 import com.ozads.futsalnepal.repository.CustomerRepository;
 import com.ozads.futsalnepal.repository.LoginRepository;
 import com.ozads.futsalnepal.repository.VerificationRepository;
 
-import com.ozads.futsalnepal.request.CustomerAddressCreationRequest;
+
 import com.ozads.futsalnepal.request.CustomerCreationRequest;
 
-import com.ozads.futsalnepal.response.AddressResponseDto;
+
 import com.ozads.futsalnepal.response.CustomerResponseDto;
 import com.ozads.futsalnepal.util.DateUtil;
 import com.ozads.futsalnepal.util.EmailUtility;
@@ -40,7 +40,7 @@ import com.ozads.futsalnepal.util.Md5Hashing;
 import com.ozads.futsalnepal.util.Status;
 import com.ozads.futsalnepal.util.TokenGenerator;
 import com.ozads.futsalnepal.util.VerificationStatus;
-import com.ozads.futsalnepal.dto.AddressDto;
+
 
 
 @Service
@@ -57,8 +57,7 @@ public class CustomerService {
 	@Autowired
 	LoginService loginService;
 
-	@Autowired
-	AddressRepository addressRepository;
+	
 
 	@Autowired
 	VerificationRepository verificationRepository;
@@ -74,10 +73,16 @@ public class CustomerService {
 			throw new AlreadyExistException("Username Already Exits");
 		}
 
-		Customer c = customerRepository.findByUsernameAndStatusNot(customerCreationRequest.getUsername(), Status.DELETED);
+		Customer c = customerRepository.findByEmailAndStatusNot(customerCreationRequest.getEmail(), Status.DELETED);
 		if (c != null) {
-			throw new AlreadyExistException("Username already Exits !!");
+			throw new AlreadyExistException("Email already Exits !!");
 		}
+		
+		Customer cc = customerRepository.findByPhoneNoAndStatusNot(customerCreationRequest.getPhoneNo(), Status.DELETED);
+		if (cc != null) {
+			throw new AlreadyExistException("Phone Number already Exits !!");
+		}
+		
 		System.out.println(customerCreationRequest.getEmail().toString());
 		Customer customer = new Customer();
 		customer.setFullName(customerCreationRequest.getFullName());
@@ -87,15 +92,22 @@ public class CustomerService {
 		customer.setPhoneNo(customerCreationRequest.getPhoneNo());
 		customer.setStatus(Status.ACTIVE);
 		customer.setUsername(customerCreationRequest.getUsername());
+		customer.setAddress(customerCreationRequest.getAddress());
 		
 		customer.setCreatedDate(new Date());
 		
+		Customer savedCustomer = customerRepository.save(customer);
+		
 		TokenGenerator tg = new TokenGenerator();
-		String token = tg.generateToken(customerCreationRequest.getEmail());
+		String token = tg.generateToken(customerCreationRequest.getUsername());
 
 		Verification verification = verificationRepository
 				.findVerificationByEmailAndStatusNot(customerCreationRequest.getEmail(), VerificationStatus.EXPIRE);
 
+		if(verification!=null) {
+			throw new AlreadyExistException("Email Already Exits please verify");
+		}
+		
 		if (verification == null) {
 			Verification verifiy = new Verification();
 			verifiy.setEmail(customerCreationRequest.getEmail());
@@ -105,13 +117,14 @@ public class CustomerService {
 			verifiy.setStatus(VerificationStatus.ACTIVE);
 			EmailUtility.sendVerification(customerCreationRequest.getEmail(), token);
 			verificationService.saveVerification(verifiy);
+			
 		}
 		
 	
 
 		LOG.debug("Added.");
 		LOG.debug("Customer Adding..");
-		Customer savedCustomer = customerRepository.save(customer);
+		
 		LOG.debug("Customer Added");
 		if (savedCustomer != null) {
 			Login login = new Login();
@@ -129,18 +142,18 @@ public class CustomerService {
 				e.printStackTrace();
 			}
 
-			
-			List<CustomerAddressCreationRequest> address = customerCreationRequest.getAddress();
-			if (address != null) {
-				for (CustomerAddressCreationRequest add : address) {
-					Address addresses = new Address();
-					addresses.setPlace(add.getPlace());
-					addresses.setCustomer(savedCustomer);
-
-					addressRepository.save(addresses);
-					LOG.debug("Address Added");
-				}
-			}
+		
+//			List<CustomerAddressCreationRequest> address = customerCreationRequest.getAddress();
+//			if (address != null) {
+//				for (CustomerAddressCreationRequest add : address) {
+//					Address addresses = new Address();
+//					addresses.setPlace(add.getPlace());
+//					addresses.setCustomer(savedCustomer);
+//
+//					addressRepository.save(addresses);
+//					LOG.debug("Address Added");
+//				}
+//			}
 
 		}
 
@@ -165,16 +178,7 @@ public class CustomerService {
 		loginRepository.save(l);
 	}
 	
-	private void emailDuplication(String email, Customer customer) {
-		LOG.debug("Check for Email duplication");
-
-		Customer c = customerRepository.findByEmailAndStatusNot(email, Status.DELETED);
-		if (c != null && customer.getId().equals(c.getId())) {
-
-			throw new AlreadyExistException("Email Already Exit");
-
-		}
-	}
+	
 	
 	public List<CustomerDto> listAllCustomer() {
 		LOG.debug("Request to get All customer");
@@ -191,17 +195,18 @@ public class CustomerService {
 			
 			customerDto.setUsername(u.getUsername());
 			customerDto.setPhoneNo(u.getPhoneNo());
-			List<AddressDto> adddresss = new ArrayList<>();
-			List<Address> add = u.getAddress();
-			if (add != null) {
-				add.stream().forEach(a -> {
-					AddressDto dd = new AddressDto();
-					dd.setId(a.getId());
-					dd.setPlace(a.getPlace());
-					adddresss.add(dd);
-				});
-			}
-			customerDto.setAddress(adddresss);
+			customerDto.setAddress(u.getAddress());
+//			List<AddressDto> adddresss = new ArrayList<>();
+//			List<Address> add = u.getAddress();
+//			if (add != null) {
+//				add.stream().forEach(a -> {
+//					AddressDto dd = new AddressDto();
+//					dd.setId(a.getId());
+//					dd.setPlace(a.getPlace());
+//					adddresss.add(dd);
+//				});
+//			}
+//			customerDto.setAddress(adddresss);
 			customers.add(customerDto);
 
 		});

@@ -12,7 +12,7 @@ public class CourtResponseDto implements Serializable {
 	private String username;
 	private String email;
 	private String price;
-	List<CourtAddressResponse> address;
+	String address;
 	
 	
 	
@@ -64,15 +64,17 @@ public class CourtResponseDto implements Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	
-	public List<CourtAddressResponse> getAddress() {
+
+	public String getAddress() {
 		return address;
 	}
-	
-	public void setAddress(List<CourtAddressResponse> address) {
+
+	public void setAddress(String address) {
 		this.address = address;
 	}
+	
+	
+	
 	
 	
 }

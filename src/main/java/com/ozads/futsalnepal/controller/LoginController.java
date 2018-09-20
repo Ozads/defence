@@ -1,6 +1,8 @@
 package com.ozads.futsalnepal.controller;
 
 
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -38,16 +40,15 @@ public class LoginController {
 	@ApiOperation(value="login Api",notes="Api to Login")
 	public ResponseEntity<Object> login(@Valid @RequestBody LoginDto loginDto) {
 		LOG.debug("Login Request", loginDto.getUsername());
-		LoginResponseDto loginResponseDto = loginService.logInUser(loginDto.getUsername(), loginDto.getPassword(),
-				Status.ACTIVE);
-		return new ResponseEntity<Object>(new LoginResponse(loginResponseDto), HttpStatus.OK);
+		Map<Object, Object> response =loginService.logInUser(loginDto);
+		return new ResponseEntity<Object>(response, HttpStatus.OK);
 	}
 	
 	
 	@ApiOperation(value="Logout",notes="Api to Logout")
 	@RequestMapping(value = "/logout", method = RequestMethod.POST)
-	public ResponseEntity<Object> logout(@RequestHeader Long userId) {
-		loginService.logout(userId);
+	public ResponseEntity<Object> logout(@RequestHeader Long loginId) {
+		loginService.logout(loginId);
 		return new ResponseEntity<Object>("You are logged out from the system",HttpStatus.OK);
 	}
 	

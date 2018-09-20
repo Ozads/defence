@@ -35,8 +35,7 @@ public class Customer implements Serializable{
 	@Column(name="phone_no")
 	private String phoneNo;
 	
-	@OneToMany(mappedBy="customer", fetch=FetchType.LAZY)
-	private List<Address> address;
+	private String address;
 	
 	@OneToMany(mappedBy="customer", fetch=FetchType.LAZY)
 	private List<Login> logins;
@@ -115,12 +114,15 @@ public class Customer implements Serializable{
 			
 
 
-	public List<Address> getAddress() {
+	
+
+
+	public String getAddress() {
 		return address;
 	}
 
 
-	public void setAddress(List<Address> address) {
+	public void setAddress(String address) {
 		this.address = address;
 	}
 

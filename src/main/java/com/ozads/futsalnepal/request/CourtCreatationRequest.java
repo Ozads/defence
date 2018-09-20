@@ -20,7 +20,7 @@ public class CourtCreatationRequest implements Serializable {
 	private String username;
 	private String price;
 	
-	private List<CourtAddressCreatationRequest> courtAddress;
+	private String courtAddress;
 	
 	
 	
@@ -67,13 +67,14 @@ public class CourtCreatationRequest implements Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	public List<CourtAddressCreatationRequest> getCourtAddress() {
+	public String getCourtAddress() {
 		return courtAddress;
 	}
-	public void setCourtAddress(List<CourtAddressCreatationRequest> courtAddress) {
+	public void setCourtAddress(String courtAddress) {
 		this.courtAddress = courtAddress;
 	}
+	
+	
 	
 	
 	

@@ -1,60 +1,47 @@
-package com.ozads.futsalnepal.request;
+package com.ozads.futsalnepal.response;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
 @SuppressWarnings("serial")
-public class BookingCreatationRequest implements Serializable {
-
+public class TimeSlotResponse implements Serializable{
+	
 	@JsonIgnore
 	private Long id;
-	
+
 	private String timeSlot;
 	
-	private Long courtId;
+	private String courtName;
 	
 	
-	
-	
-	
-	public Long getCourtId() {
-		return courtId;
+
+	public String getCourtName() {
+		return courtName;
 	}
-	public void setCourtId(Long courtId) {
-		this.courtId = courtId;
+
+	public void setCourtName(String courtName) {
+		this.courtName = courtName;
 	}
+
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
-	
 
-	
-	
-	
-	
-	
-	
-	
 	public String getTimeSlot() {
 		return timeSlot;
 	}
+
 	public void setTimeSlot(String timeSlot) {
 		this.timeSlot = timeSlot;
 	}
 	
 	
 	
-	
-	
-	
-	
+
 
 }

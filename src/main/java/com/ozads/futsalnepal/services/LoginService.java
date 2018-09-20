@@ -9,6 +9,8 @@ import javax.ws.rs.core.MediaType;
 
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
@@ -19,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.ozads.futsalnepal.dto.LoginDto;
 import com.ozads.futsalnepal.dto.LoginResponseDto;
 import com.ozads.futsalnepal.exceptions.ExpireException;
 import com.ozads.futsalnepal.exceptions.LoginFailException;
@@ -77,65 +80,55 @@ public class LoginService {
 	}
 	 
 	 @Transactional
-		public LoginResponseDto logInUser(String username, String password, Status active) {
+	 public Map<Object, Object> logInUser(LoginDto loginDto) {
 			LOG.debug("Request for Login");
-			Login login = loginRepository.findByUsernameAndStatusNot(username, Status.DELETED);
+			
+			
+			Login login = loginRepository.findByUsernameAndStatusNot(loginDto.getUsername(), Status.DELETED);
 			if (login == null) {
 
 				throw new LoginFailException("Sorry,Username not found !!");
 			}
 
-			Login l = loginRepository.findByUsernameAndStatus(username, Status.BLOCKED);
+			Login l = loginRepository.findByUsernameAndStatus(loginDto.getUsername(), Status.BLOCKED);
 			if (l != null) {
 				throw new VerificationException("Sorry Your Account is not verified Check Your Email");
 			}
 
 			try {
-				
-				System.out.println(login.getPassword());
-				
-				System.out.println("Swagger:"+password);
-				System.out.println(Md5Hashing.getPw(password));
-				if (Md5Hashing.getPw(password).equals(login.getPassword())) {
+				if (Md5Hashing.getPw(loginDto.getPassword()).equals(login.getPassword())) {
 					login.setLastLogin(new Date());
 					login.setLoginStatus(LoginStatus.LOGGEDIN);
-					
-					String ip=getClientIp();
-					System.out.println("my ip="+ip);
-					Client client = ClientBuilder.newClient();
-					  Response response = client.target("https://api.ipdata.co/")
-					    .request(MediaType.TEXT_PLAIN_TYPE)
-					    .header("Accept", "application/json")
-					    .get();
-					  
-					  System.out.println("body:" + response.readEntity(String.class));
-					
-					
-					
+									
 					login.setToken(TokenGenerator.getToken());
 					if (tokenExpireAfter > 0) {
 						login.setTokenExpirationDateTime(
 								DateUtil.currentDateTimePlusMinutes(tokenExpireAfter));
 					}
-					LoginResponseDto responce = getLoginResponse(login);
+				
+					
+					
 					LOG.debug("Login Accepted");
-					return responce;
+					Map<Object, Object> response = new HashMap<>();
+					response.put("loginId",login.getId());
+					response.put("token",login.getToken());
+					response.put("loginType",login.getLoginType());
+					if(login.getLoginType().equals(LoginType.ADMIN)) {
+						response.put("userId",login.getUser().getId());
+					}else if(login.getLoginType().equals(LoginType.COURT)) {
+						response.put("courtId",login.getCourt().getId());
+					}else if(login.getLoginType().equals(LoginType.CUSTOMER)) {
+						response.put("customerId",login.getCustomer().getId());
+					}
+					return response;
 				}
 			} catch (NoSuchAlgorithmException e) {
 				e.printStackTrace();
 			}
 
 			throw new LoginFailException("Username and Password missmatch");
-	}
-	 
-	 private LoginResponseDto getLoginResponse(Login login) {
-			LoginResponseDto loginResponseDto=new LoginResponseDto();
-			if(login.getLoginType().equals(LoginType.CUSTOMER)) {
-				loginResponseDto=new LoginResponseDto.Builder().id(login.getCustomer().getId())
-						.token(login.getToken()).build();
-			}
-			return loginResponseDto;
-	}
+		}
+	
 	 
 	 public Login logout(Long userId) {
 			LOG.debug("request for logout");

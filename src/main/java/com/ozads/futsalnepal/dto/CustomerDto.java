@@ -14,7 +14,7 @@ public class CustomerDto implements Serializable {
 	private String email;
 	private String phoneNo;
 	
-	private List<AddressDto> address;
+	String address;
 
 	public Long getId() {
 		return id;
@@ -57,13 +57,15 @@ public class CustomerDto implements Serializable {
 		this.phoneNo = phoneNo;
 	}
 
-	public List<AddressDto> getAddress() {
+	public String getAddress() {
 		return address;
 	}
 
-	public void setAddress(List<AddressDto> address) {
+	public void setAddress(String address) {
 		this.address = address;
 	}
+
+	
 	
 	
 	

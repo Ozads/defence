@@ -15,9 +15,20 @@ public class CustomerResponseDto implements Serializable {
 	private String phoneNo;
 	
 
-	List<AddressResponseDto> address;
+	 
 
 
+	String address;
+
+
+	public String getAddress() {
+		return address;
+	}
+
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
 	
 	public String getUsername() {
 		return username;
@@ -59,14 +70,7 @@ public class CustomerResponseDto implements Serializable {
 	}
 
 
-	public List<AddressResponseDto> getAddress() {
-		return address;
-	}
-
-
-	public void setAddress(List<AddressResponseDto> address) {
-		this.address = address;
-	}
+	
 
 	
 

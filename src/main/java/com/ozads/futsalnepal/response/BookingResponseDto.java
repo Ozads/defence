@@ -15,8 +15,7 @@ public class BookingResponseDto implements Serializable{
 	private Date bookingDate;
 	private String bookingBy;
 	private String bookingTo;
-	List<AddressResponseDto> address;
-	List<CourtAddressResponse> court;
+
 	public Long getId() {
 		return id;
 	}
@@ -53,18 +52,6 @@ public class BookingResponseDto implements Serializable{
 	}
 	public void setBookingTo(String bookingTo) {
 		this.bookingTo = bookingTo;
-	}
-	public List<AddressResponseDto> getAddress() {
-		return address;
-	}
-	public void setAddress(List<AddressResponseDto> address) {
-		this.address = address;
-	}
-	public List<CourtAddressResponse> getCourt() {
-		return court;
-	}
-	public void setCourt(List<CourtAddressResponse> court) {
-		this.court = court;
 	}
 	
 	

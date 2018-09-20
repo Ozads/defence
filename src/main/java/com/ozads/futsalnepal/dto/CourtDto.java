@@ -8,13 +8,26 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class CourtDto implements Serializable {
 
+	private Long id;
 	private String courtName;
 	private String phoneNo;
 	private String username;
 	private String email;
 	private String price;
-	List<CourtAddressDto> address;
 	
+	String address;
+	
+	
+	
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public String getCourtName() {
 		return courtName;
 	}
@@ -57,16 +70,18 @@ public class CourtDto implements Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	
-	
-	public List<CourtAddressDto> getAddress() {
+
+	public String getAddress() {
 		return address;
 	}
-	
-	public void setAddress(List<CourtAddressDto> address) {
+
+	public void setAddress(String address) {
 		this.address = address;
 	}
+	
+	
+	
+	
 	
 	
 }

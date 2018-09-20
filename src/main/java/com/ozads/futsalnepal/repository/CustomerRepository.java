@@ -34,4 +34,7 @@ public interface CustomerRepository extends JpaRepository<Customer ,Long> {
 
 	Customer findByUsernameAndStatusNot(String username, Status deleted);
 
+
+	Customer findByPhoneNoAndStatusNot(String phoneNo, Status deleted);
+
 }

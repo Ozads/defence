@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.ozads.futsalnepal.model.Booking;
 import com.ozads.futsalnepal.model.Court;
+import com.ozads.futsalnepal.model.Customer;
 import com.ozads.futsalnepal.util.BookingStatus;
 
 
@@ -30,6 +31,11 @@ public interface BookingRepository extends JpaRepository<Booking,Long> {
 
 	
 	List<Booking> findBookingByCourtAndBookingStatus(Court court, BookingStatus AVAILABLE);
+
+
+
+
+	List<Booking> findBookingByCustomerAndBookingStatus(Customer customer, BookingStatus available);
 
 
 

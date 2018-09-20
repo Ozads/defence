@@ -12,27 +12,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ozads.futsalnepal.dto.CourtAddressDto;
+
 import com.ozads.futsalnepal.dto.CourtDto;
 import com.ozads.futsalnepal.exceptions.AlreadyExistException;
 import com.ozads.futsalnepal.exceptions.NotFoundException;
 
-import com.ozads.futsalnepal.model.Address;
+
 import com.ozads.futsalnepal.model.Customer;
 import com.ozads.futsalnepal.model.Login;
 import com.ozads.futsalnepal.model.Court;
-import com.ozads.futsalnepal.model.CourtAddress;
+
 import com.ozads.futsalnepal.model.User;
 import com.ozads.futsalnepal.model.Verification;
 import com.ozads.futsalnepal.repository.CustomerRepository;
 import com.ozads.futsalnepal.repository.LoginRepository;
-import com.ozads.futsalnepal.repository.CourtAddressRepository;
+
 import com.ozads.futsalnepal.repository.CourtRepository;
 import com.ozads.futsalnepal.repository.UserRepository;
 import com.ozads.futsalnepal.repository.VerificationRepository;
-import com.ozads.futsalnepal.request.CourtAddressCreatationRequest;
+
 import com.ozads.futsalnepal.request.CourtCreatationRequest;
-import com.ozads.futsalnepal.request.CustomerAddressCreationRequest;
+
 
 import com.ozads.futsalnepal.response.CourtByAddressDto;
 import com.ozads.futsalnepal.util.DateUtil;
@@ -60,8 +60,7 @@ public class CourtService {
 	@Autowired
 	CourtRepository courtRepository;
 
-	@Autowired
-	CourtAddressRepository courtAddressRepository;
+	
 
 	@Autowired
 	UserRepository userRepository;
@@ -77,7 +76,7 @@ public class CourtService {
 
 	
 	@Transactional
-	public Court saveCourt(Long userId, CourtCreatationRequest courtCreationRequest) {
+	public Court saveCourt(CourtCreatationRequest courtCreationRequest) {
 		LOG.debug("Message For Court Creatation");
 		
 		
@@ -102,23 +101,24 @@ public class CourtService {
 		court.setPrice(courtCreationRequest.getPrice());
 		court.setUsername(courtCreationRequest.getUsername());
 		court.setEmail(courtCreationRequest.getEmail());
+		court.setCourtAddress(courtCreationRequest.getCourtAddress());
 		LOG.debug("Adding Court....");
 		Court ss = courtRepository.save(court);
 		LOG.debug("Court Added");
 		if (ss != null) {
-			List<CourtAddressCreatationRequest> address = courtCreationRequest.getCourtAddress();
-			if (address != null) {
-				LOG.debug("Address Adding");
-				for (CourtAddressCreatationRequest add : address) {
-					CourtAddress addresses = new CourtAddress();
-					addresses.setPlace(add.getPlace());
-					
-					addresses.setCourt(ss);
-
-					courtAddressRepository.save(addresses);
-					LOG.debug("Address Added");
-				}
-			}
+//			List<CourtAddressCreatationRequest> address = courtCreationRequest.getCourtAddress();
+//			if (address != null) {
+//				LOG.debug("Address Adding");
+//				for (CourtAddressCreatationRequest add : address) {
+//					CourtAddress addresses = new CourtAddress();
+//					addresses.setPlace(add.getPlace());
+//					
+//					addresses.setCourt(ss);
+//
+//					courtAddressRepository.save(addresses);
+//					LOG.debug("Address Added");
+//				}
+//			}
 
 			Login login = new Login();
 			try {
@@ -249,25 +249,29 @@ public class CourtService {
 
 		court.stream().forEach(u -> {
 			CourtDto dto = new CourtDto();
+			dto.setId(u.getId());
 			dto.setCourtName(u.getCourtName());
 			dto.setEmail(u.getEmail());
 			dto.setPhoneNo(u.getPhoneNo());
 			dto.setUsername(u.getUsername());
-			dto.setPrice(u.getPrice());			
-			List<CourtAddressDto> courtAddress = new ArrayList<>();
-			List<CourtAddress> addresses = u.getCourtAddress();
-			if (addresses != null) {
-				addresses.stream().forEach(a -> {
-					CourtAddressDto courtAddressDto = new CourtAddressDto();
-					courtAddressDto.setId(a.getId());
-					courtAddressDto.setPlace(a.getPlace());
-					
-					courtAddress.add(courtAddressDto);
-				});
-			}
-			dto.setAddress(courtAddress);
+			dto.setPrice(u.getPrice());	
+			dto.setAddress(u.getCourtAddress());
+//			List<CourtAddressDto> courtAddress = new ArrayList<>();
+//			List<CourtAddress> addresses = u.getCourtAddress();
+//			if (addresses != null) {
+//				addresses.stream().forEach(a -> {
+//					CourtAddressDto courtAddressDto = new CourtAddressDto();
+//					courtAddressDto.setId(a.getId());
+//					courtAddressDto.setPlace(a.getPlace());
+//					
+//					courtAddress.add(courtAddressDto);
+//				});
+//			}
+//			dto.setAddress(courtAddress);
+//			
 			courtDto.add(dto);
 		});
+			
 		LOG.debug("All Court List is obtain");
 
 		return courtDto;
@@ -280,25 +284,27 @@ public class CourtService {
 			throw new NotFoundException("Customer Not found !!");
 		}
 		List<CourtByAddressDto> courtDto=new ArrayList<>();
-		List<Address> add = customer.getAddress();
+		String add = customer.getAddress();
 		if (add != null) {
-			add.stream().forEach(u -> {
-				String place=u.getPlace();
-				
-				System.out.println(place);
-				
-				List<CourtAddress> address=courtAddressRepository.
-						findAddressByPlace(place);
-
-						address.stream().forEach(a->{
+			List<Court> court=courtRepository.findByCourtAddressAndStatusNot(add,Status.DELETED);
+//			stream().forEach(u -> {
+//				String place=u.getPlace();
+//				
+//				System.out.println(place);
+//				
+//				List<CourtAddress> address=courtAddressRepository.
+//						findAddressByPlace(place);
+//
+							court.stream().forEach(a->{
 							CourtByAddressDto dto=new CourtByAddressDto();
-							dto.setCourtName(a.getCourt().getCourtName());
-							dto.setPhoneNo(a.getCourt().getPhoneNo());
-							dto.setEmail(a.getCourt().getEmail());
+							dto.setCourtName(a.getCourtName());
+							dto.setPhoneNo(a.getPhoneNo());
+							dto.setEmail(a.getEmail());
+							dto.setPrice(a.getPrice());
 						
 							courtDto.add(dto);
 						});
-			});
+			
 		}
 		
 		

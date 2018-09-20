@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -28,9 +29,7 @@ public class Court implements Serializable {
 	@Column(name="court_name")
 	private String courtName;
 	
-	@Column(name="court_address")
-	@OneToMany(mappedBy="court", fetch=FetchType.LAZY)
-	private List<CourtAddress> courtAddress;
+	private String courtAddress;
 	
 	@Column(name="phone_No")
 	private String phoneNo;
@@ -59,9 +58,11 @@ public class Court implements Serializable {
 	@Enumerated(EnumType.STRING)
 	protected Status status;
 	
+	
 	@OneToMany(mappedBy="court", fetch=FetchType.LAZY)
 	private List<Booking> bookings;
 	
+
 	
 	
 	@Temporal(TemporalType.DATE)
@@ -74,7 +75,11 @@ public class Court implements Serializable {
 	
 
 	
+		
 	
+	
+	
+
 	
 
 	
@@ -202,11 +207,13 @@ public class Court implements Serializable {
 	
 	
 
-	public List<CourtAddress> getCourtAddress() {
+	
+
+	public String getCourtAddress() {
 		return courtAddress;
 	}
 
-	public void setCourtAddress(List<CourtAddress> courtAddress) {
+	public void setCourtAddress(String courtAddress) {
 		this.courtAddress = courtAddress;
 	}
 

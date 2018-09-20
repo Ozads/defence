@@ -65,9 +65,8 @@ public class CustomerController {
 	@RequestMapping(value="/listAll",method=RequestMethod.GET)
 	public ResponseEntity<Object> listAllCustomer(@RequestHeader Long loginId){
 		List<CustomerDto> customer=customerService.listAllCustomer();
-		Map<Object, Object> response = new HashMap<Object, Object>();
-		response.put("customers", customer);
-		return new ResponseEntity<Object>(response,HttpStatus.OK);
+		
+		return new ResponseEntity<Object>(customer,HttpStatus.OK);
 	}
 	
 	
