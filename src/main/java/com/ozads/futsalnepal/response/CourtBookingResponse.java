@@ -12,8 +12,28 @@ public class CourtBookingResponse implements Serializable {
 	private String bookingName;
 	private Date bookingDate;
 	private String bookingBy;
+	private String customerPhone;
+	private String customerEmail;
 	
 	
+	
+	
+	public String getCustomerEmail() {
+		return customerEmail;
+	}
+
+	public void setCustomerEmail(String customerEmail) {
+		this.customerEmail = customerEmail;
+	}
+
+	public String getCustomerPhone() {
+		return customerPhone;
+	}
+
+	public void setCustomerPhone(String customerPhone) {
+		this.customerPhone = customerPhone;
+	}
+
 	String address;
 
 	public Long getId() {
@@ -26,6 +46,9 @@ public class CourtBookingResponse implements Serializable {
 
 	
 
+	
+
+	
 	public String getTimeSlot() {
 		return timeSlot;
 	}

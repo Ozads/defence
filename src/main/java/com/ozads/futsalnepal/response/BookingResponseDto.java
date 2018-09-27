@@ -23,6 +23,8 @@ public class BookingResponseDto implements Serializable{
 		this.id = id;
 	}
 	
+	
+	
 	public String getTimeSlot() {
 		return timeSlot;
 	}

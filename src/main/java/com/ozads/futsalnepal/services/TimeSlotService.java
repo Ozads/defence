@@ -103,32 +103,32 @@ public class TimeSlotService {
 	}
 	
 	
-//	public List<TimeSlotByCourtDto> getTimeSlotById(Long courtId) {
-//
-//		Court court=courtRepository.findByIdAndStatusNot(courtId, Status.DELETED);
-//		if(court==null) {
-//			throw new NotFoundException("Court Not found !!");
-//		}
-//		List<TimeSlotByCourtDto> timeSlotDto=new ArrayList<>();
-////		Long id = court.getId();
-//		if (courtId != null) {
-//			List<TimeSlot> timeSlot=timeSlotRepository.findTimeSlotByCourtId(courtId);
-//
-//							timeSlot.stream().forEach(a->{
-//							TimeSlotByCourtDto dto=new TimeSlotByCourtDto();
-//							dto.setId(a.getId());
-//							dto.setTimeSlot(a.getTimeSlot());
-//						
-//							timeSlotDto.add(dto);
-//						});
-//			
-//		}
-//		
-//		
-//		
-//		return timeSlotDto;
-//
-//	}
+	public List<TimeSlotByCourtDto> getTimeSlotById(Long courtId) {
+
+		Court court=courtRepository.findByIdAndStatusNot(courtId, Status.DELETED);
+		if(court==null) {
+			throw new NotFoundException("Court Not found !!");
+		}
+		List<TimeSlotByCourtDto> timeSlotDto=new ArrayList<>();
+		Long id = court.getId();
+		if (courtId != null) {
+			List<TimeSlot> timeSlot=timeSlotRepository.findTimeSlotByCourtId(courtId);
+
+							timeSlot.stream().forEach(a->{
+							TimeSlotByCourtDto dto=new TimeSlotByCourtDto();
+							dto.setId(a.getId());
+							dto.setTimeSlot(a.getTimeSlot());
+						
+							timeSlotDto.add(dto);
+						});
+			
+		}
+		
+		
+		
+		return timeSlotDto;
+
+	}
 	
 	@Transactional
 	public void deleteTimeSlot(Long timeSlotId) {

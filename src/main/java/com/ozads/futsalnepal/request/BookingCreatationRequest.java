@@ -13,7 +13,7 @@ public class BookingCreatationRequest implements Serializable {
 	@JsonIgnore
 	private Long id;
 	
-	private String timeSlot;
+	private Long slotId;
 	
 	private Long courtId;
 	
@@ -33,6 +33,16 @@ public class BookingCreatationRequest implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
+	public Long getSlotId() {
+		return slotId;
+	}
+	public void setSlotId(Long slotId) {
+		this.slotId = slotId;
+	}
+	
+	
+	
+	
 	
 	
 
@@ -40,15 +50,6 @@ public class BookingCreatationRequest implements Serializable {
 	
 	
 	
-	
-	
-	
-	public String getTimeSlot() {
-		return timeSlot;
-	}
-	public void setTimeSlot(String timeSlot) {
-		this.timeSlot = timeSlot;
-	}
 	
 	
 	

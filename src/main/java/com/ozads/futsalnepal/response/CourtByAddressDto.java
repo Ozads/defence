@@ -9,8 +9,19 @@ public class CourtByAddressDto implements Serializable {
 	private String courtName;
 	private String phoneNo;
 	private String price;
+	String address;
 	
 	
+	
+	
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
 	public String getPrice() {
 		return price;
 	}

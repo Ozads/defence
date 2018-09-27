@@ -46,7 +46,7 @@ public class LoginController {
 	
 	
 	@ApiOperation(value="Logout",notes="Api to Logout")
-	@RequestMapping(value = "/logout", method = RequestMethod.POST)
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public ResponseEntity<Object> logout(@RequestHeader Long loginId) {
 		loginService.logout(loginId);
 		return new ResponseEntity<Object>("You are logged out from the system",HttpStatus.OK);

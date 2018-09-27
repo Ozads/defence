@@ -72,6 +72,13 @@ public class Booking implements Serializable {
 
 	
 
+	
+
+
+	
+
+	
+
 
 	public String getTimeSlot() {
 		return timeSlot;
@@ -82,8 +89,6 @@ public class Booking implements Serializable {
 		this.timeSlot = timeSlot;
 	}
 
-
-	
 
 	public Long getId() {
 		return id;

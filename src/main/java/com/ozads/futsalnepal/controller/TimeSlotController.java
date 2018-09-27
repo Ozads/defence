@@ -52,6 +52,15 @@ public class TimeSlotController {
 		return new ResponseEntity<Object>(timeSlotResponse,HttpStatus.OK);
 		}
 		
+		@RequestMapping(value="/{courtId}",method=RequestMethod.GET)
+		@ApiOperation(value="List TimeSlots ",notes="Api to List all timeSlots")
+		public ResponseEntity<Object>  getTimeSlotByCourtId(@PathVariable ("courtId") Long courtId){
+		LOG.debug("request Accepted to List All Address");
+			List<TimeSlotByCourtDto> timeSlotResponse=timeSlotService. getTimeSlotById(courtId);
+
+		return new ResponseEntity<Object>(timeSlotResponse,HttpStatus.OK);
+		}
+		
 		
 		//@ApiImplicitParams({
 				//@ApiImplicitParam(name="token",required=true,dataType="String",paramType="header")})

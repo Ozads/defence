@@ -6,8 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @SuppressWarnings("serial")
 public class TimeSlotResponse implements Serializable{
-	
-	@JsonIgnore
 	private Long id;
 
 	private String timeSlot;

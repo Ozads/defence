@@ -130,10 +130,11 @@ public class LoginService {
 		}
 	
 	 
-	 public Login logout(Long userId) {
+	 public Login logout(Long loginId) {
 			LOG.debug("request for logout");
-			if (userId != null) {
-				Login user = loginRepository.findLoginById(userId);
+			if (loginId != null) {
+				Login user = loginRepository.findLoginById(loginId);
+				System.out.println(user.getId());
 				if (user == null) {
 					throw new LogoutFailException("User id mismatch");
 				}

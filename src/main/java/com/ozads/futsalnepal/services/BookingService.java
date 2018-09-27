@@ -14,10 +14,12 @@ import org.springframework.stereotype.Service;
 import com.ozads.futsalnepal.exceptions.NotFoundException;
 import com.ozads.futsalnepal.model.Booking;
 import com.ozads.futsalnepal.model.Court;
+import com.ozads.futsalnepal.model.TimeSlot;
 import com.ozads.futsalnepal.model.Customer;
 import com.ozads.futsalnepal.repository.BookingRepository;
 import com.ozads.futsalnepal.repository.CourtRepository;
 import com.ozads.futsalnepal.repository.CustomerRepository;
+import com.ozads.futsalnepal.repository.TimeSlotRepository;
 import com.ozads.futsalnepal.request.BookingCreatationRequest;
 import com.ozads.futsalnepal.response.CourtBookingResponse;
 import com.ozads.futsalnepal.response.CustomerBookingResponse;
@@ -37,6 +39,9 @@ public class BookingService {
 	
 	@Autowired
 	CourtRepository courtRepository;
+	
+	@Autowired
+	TimeSlotRepository timeSlotRepository;
 
 	
 	public Booking saveBooking(Long customerId,BookingCreatationRequest bookingRequest) {
@@ -58,11 +63,8 @@ public class BookingService {
 		
 		Booking booking = new Booking();
 		booking.setBookingDate(new Date());
-		
-		
-		booking.setTimeSlot(bookingRequest.getTimeSlot());
-		
-		
+		TimeSlot ts = timeSlotRepository.findTimeSlotById(bookingRequest.getSlotId());
+		booking.setTimeSlot(ts.getTimeSlot());
 		booking.setBookingStatus(BookingStatus.AVAILABLE);
 		booking.setCustomer(customer);
 		booking.setCourt(court);
@@ -160,8 +162,8 @@ public class BookingService {
 			
 			bookingResponseDto.setTimeSlot(u.getTimeSlot());
 			bookingResponseDto.setBookingDate(u.getBookingDate());
-			
-			
+			bookingResponseDto.setCustomerEmail(u.getCustomer().getEmail());
+			bookingResponseDto.setCustomerPhone(u.getCustomer().getPhoneNo());
 			bookingResponseDto.setBookingBy(u.getCustomer().getFullName());
 			
 			
@@ -197,7 +199,8 @@ public class BookingService {
 				
 			bookingResponseDto.setTimeSlot(u.getTimeSlot());
 			bookingResponseDto.setBookingDate(u.getBookingDate());
-			
+			bookingResponseDto.setCourtEmail(u.getCourt().getEmail());
+			bookingResponseDto.setCourtPhone(u.getCourt().getPhoneNo());
 			
 			bookingResponseDto.setBookingTo(u.getCourt().getCourtName());
 			

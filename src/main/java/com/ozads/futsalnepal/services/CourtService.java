@@ -301,6 +301,7 @@ public class CourtService {
 							dto.setPhoneNo(a.getPhoneNo());
 							dto.setEmail(a.getEmail());
 							dto.setPrice(a.getPrice());
+							dto.setAddress(a.getCourtAddress());
 						
 							courtDto.add(dto);
 						});

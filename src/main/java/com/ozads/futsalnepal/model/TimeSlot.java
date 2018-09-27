@@ -66,6 +66,8 @@ public class TimeSlot {
 	public void setTimeSlot(String timeSlot) {
 		this.timeSlot = timeSlot;
 	}
+
+	
 	
 	
 
