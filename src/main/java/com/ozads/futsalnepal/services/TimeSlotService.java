@@ -145,19 +145,24 @@ public class TimeSlotService {
 	
 
 	
-	public List<TimeSlotResponse> listAllTimeSlots(){
-		
-		List<TimeSlot> timeSlot=timeSlotRepository.findAll();
-		List<TimeSlotResponse> timeSlotResponses=new ArrayList<>();
-		timeSlot.stream().forEach(u->{
-			TimeSlotResponse response =new TimeSlotResponse();
-			response.setId(u.getId());
-			response.setTimeSlot(u.getTimeSlot());
-			response.setCourtName(u.getCourtName());
-			timeSlotResponses.add(response);
-		});
-		return timeSlotResponses;
-	}
+//	public List<TimeSlotResponse> listAllTimeSlots(Long courtId){
+//		
+//		Court court=courtRepository.findByIdAndStatusNot(courtId, Status.DELETED);
+//		if(court==null) {
+//			throw new NotFoundException("Court Not found !!");
+//		}
+//		
+//		List<TimeSlot> timeSlot=timeSlotRepository.findAll();
+//		List<TimeSlotResponse> timeSlotResponses=new ArrayList<>();
+//		timeSlot.stream().forEach(u->{
+//			TimeSlotResponse response =new TimeSlotResponse();
+//			response.setId(u.getId());
+//			response.setTimeSlot(u.getTimeSlot());
+//			response.setCourtName(u.getCourtName());
+//			timeSlotResponses.add(response);
+//		});
+//		return timeSlotResponses;
+//	}
 }
 //	
 //	public List<TimeSlotResponse> listAllTimeSlotByCourt(Long courtId) {

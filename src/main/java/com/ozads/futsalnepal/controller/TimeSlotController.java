@@ -45,9 +45,9 @@ public class TimeSlotController {
 		
 		@RequestMapping(value="/listAll",method=RequestMethod.GET)
 		@ApiOperation(value="List TimeSlots ",notes="Api to List all timeSlots")
-		public ResponseEntity<Object> listAllTimeSlots(){
+		public ResponseEntity<Object> listAllTimeSlots(@RequestHeader Long courtId){
 		LOG.debug("request Accepted to List All Address");
-			List<TimeSlotResponse> timeSlotResponse=timeSlotService.listAllTimeSlots();
+			List<TimeSlotByCourtDto> timeSlotResponse=timeSlotService.getTimeSlotById(courtId);
 
 		return new ResponseEntity<Object>(timeSlotResponse,HttpStatus.OK);
 		}
